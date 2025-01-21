@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bobdx</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="https://img.icons8.com/fluency/48/000000/chatbot.png">
+
+    <style>
+        /* Custom styles for the time display */
+        .msg_time_send, .msg_time {
+            font-size: 12px;
+            color: #888;
+            margin-left: 10px;
+            display: inline-block;
+            vertical-align: top;
+            padding: 3px 6px;
+            border-radius: 12px;
+            background-color: #f2f2f2;
+            margin-top: 5px;
+        }
+        .msg_time_send {
+            background-color: #dcdcdc;
+        }
+        .img_cont_msg {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+        .user_img_msg, .bot_img_msg {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+        .msg_container_send {
+            background-color: #dcdcdc;
+            border-radius: 15px;
+            padding: 10px;
+            color: black;
+            max-width: 70%;
+        }
+        .msg_cotainer {
+            background-color: #82ccdd;
+            border-radius: 15px;
+            padding: 10px;
+            color: black;
+            max-width: 70%;
+        }
+        .attachment-btn {
+            cursor: pointer;
+            color: #007bff;
+            border: none;           /* Remove border */
+            outline: none; 
+            background: none;
+        }
+        .file-preview {
+            margin-top: 10px;
+        }
+        .container-fluid {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.col-chat {
+    margin-left: 0;
+    margin-right: auto; /* Pushes it to the left */
+    max-width: 50%; /* Adjust width as needed */
+}
+.col-chat {
+    width: 90%;          /* Set width to 90% of the viewport */
+    max-width: 1200px;   /* Optional: Set a max-width to avoid it being too wide */
+    margin: 0 auto;      /* Center it horizontally */
+}
+
+.msg_card_body {
+    width: 100%;         /* Make the message container stretch fully */
+}
+
+.card-footer {
+    width: 100%;         /* Ensure the input box is wide as well */
+}
+/* Style for chatbot messages */
+.bot-response p {
+    color: #050505; /* Text color */
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* Highlighting specific parts */
+.highlight {
+    background-color: #ffffcc; /* Yellow highlight */
+    font-weight: bold;
+    padding: 2px 5px;
+    border-radius: 5px;
+}
+
+/* Custom emoji styles */
+.emoji {
+    font-size: 20px;
+}
+
+/* Bot icon */
+.bot-icon {
+    color: #4caf50;
+    font-size: 20px;
+    margin-right: 8px;
+}
+#weather-btn {
+    border: none;           /* Remove border */
+    outline: none;          /* Remove outline */
+    background: none;       /* Remove background */
+    font-size: 22px;        /* Adjust icon size */
+    cursor: pointer;       /* Change cursor to pointer when hovered */
+}
+
+#weather-btn:focus {
+    outline: none;          /* Remove outline when button is focused */
+}
+/* Remove border and outline around submit button */
+#send {
+    border: none;           /* Remove border */
+    outline: none;          /* Remove outline */
+    background: none;       /* Remove background */
+    color: inherit;         /* Inherit text color from parent */
+    cursor: pointer;       /* Change cursor to pointer when hovered */
+}
+
+#send:focus {
+    outline: none;          /* Remove focus outline */
+}
+#mic-btn {
+    border: none;
+    outline: none;
+    background: none;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+#mic-btn:focus {
+    outline: none;
+}
+
+
+
+
+
+
+    </style>
+</head>
+<body>
+    <div class="container-fluid h-100">
+        <!-- Login Section -->
+        <div id="loginSection" class="row justify-content-center h-100">
+            <div class="col-md-6 col-chat">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h4>Welcome to ChatBot- Bobdx</h4>
+                        <p>Please log in to start chatting!</p>
+                    </div>
+                    <div class="card-body">
+                        <form id="loginForm">
+                            <div class="form-group">
+                                <label for="username">Name</label>
+                                <input type="text" id="username" class="form-control" placeholder="Enter your name" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" class="form-control" placeholder="Enter your email" required />
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Log In</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="chatbotSection" class="row justify-content-center h-100" style="display: none;">
+            <div class="col-md-12 col-chat">
+                <div class="card-header msg_head">
+                    <div class="d-flex bd-highlight">
+                        <div class="img_cont">
+                            <img src="https://img.icons8.com/fluency/48/000000/chatbot.png" class="rounded-circle user_img">
+                        </div>
+                        <div class="user_info">
+                            <span id="chatbotUsername">ChatBot- Bobdx</span>
+                            <p>Ask me anything!</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="messageForm" class="card-body msg_card_body">
+                    <!-- Messages will appear here -->
+                </div>  
+                <div class="card-footer">
+                    <form id="messageArea" class="input-group" enctype="multipart/form-data">
+                        <input type="text" id="text" name="msg" placeholder="Message Bobdx" autocomplete="off" class="form-control type_msg" required/>
+                        <input type="file" id="file" name="file" style="display: none;" />
+                        <div class="input-group-append">
+                            <button type="submit" id="send" class="input-group-text send_btn"><i class="fas fa-location-arrow"></i></button>
+                            <button type="button" id="mic-btn" class="input-group-text" onclick="startRecording()">
+                                <img src="https://img.icons8.com/ios-filled/50/microphone.png" alt="Mic Icon" style="width: 24px; height: 24px;">
+                            </button>                         
+                            <button type="button" class="attachment-btn" id="attachmentBtn"><i class="fas fa-paperclip"></i></button>
+                            
+
+                        </div>
+                    </form>
+                </div>
+            </div>  
+        </div>  
+    </div>  
+    <div class="chat-box" id="chat-box">
+        <!-- Bot Response -->
+        <div class="bot-response" id="bot-response">
+            <p style="color: #0056b3; font-size: 16px;"></p>
+        </div>
+    </div>
+    
+    <div id="weather-response"></div>
+
+ 
+    <script>
+        // Select the microphone button
+        const micButton = document.getElementById("mic-btn");
+        const textInput = document.getElementById("text");
+
+        // Initialize speech recognition (browser compatibility required)
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        
+        recognition.lang = 'en-US';  // Set language for speech recognition
+        recognition.continuous = false;  // Stop automatically after a pause
+        recognition.interimResults = false;  // Do not show partial results
+
+        // On start of speech recognition
+        recognition.onstart = function() {
+            micButton.innerHTML = "<i class='fas fa-microphone-slash'></i>";  // Change button icon when listening
+        };
+
+        // On speech recognition result
+        recognition.onresult = function(event) {
+            const transcript = event.results[0][0].transcript;  // Get the transcript of the speech
+            textInput.value = transcript;  // Set the input field with the recognized speech
+            micButton.innerHTML = "<i class='fas fa-microphone'></i>";  // Change button icon back to normal
+        };
+
+        // On error
+        recognition.onerror = function(event) {
+            console.error('Speech recognition error: ', event.error);
+            micButton.innerHTML = "<i class='fas fa-microphone'></i>";  // Revert the button icon if error occurs
+        };
+
+        // Start/stop microphone recording when the mic button is clicked
+        micButton.addEventListener("click", function() {
+            if (micButton.innerHTML.includes('microphone-slash')) {
+                recognition.stop();  // Stop if it's currently listening
+            } else {
+                recognition.start();  // Start listening if not already listening
+            }
+        });
+    </script>
+              
+    <script>
+        $(document).ready(function() {
+            // Show the file input when the attachment button is clicked
+            $("#attachmentBtn").on("click", function() {
+                $("#file").click();
+            });
+
+            // Handle file selection
+            $("#file").on("change", function() {
+                const file = this.files[0];
+                if (file) {
+                    // Display file name and preview if image
+                    const fileName = file.name;
+                    let previewHtml = `<p>File selected: ${fileName}</p>`;
+                    if (file.type.startsWith("image/")) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            previewHtml += `<img src="${e.target.result}" alt="Image preview" style="max-width: 200px; margin-top: 10px;" />`;
+                            $("#messageForm").append(`<div class="file-preview">${previewHtml}</div>`);
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        $("#messageForm").append(`<div class="file-preview">${previewHtml}</div>`);
+                    }
+                }
+            });
+
+            // Handle message submission
+            $("#messageArea").on("submit", function(event) {
+                event.preventDefault();  // Prevent page reload
+
+                const date = new Date();  
+                const hour = date.getHours();
+                const minute = date.getMinutes();
+                const str_time = hour + ":" + (minute < 10 ? '0' + minute : minute);  // Ensure double digit minutes
+
+                const rawText = $("#text").val();
+                const fileInput = $("#file")[0].files[0];  // Get the file object
+
+                const formData = new FormData();
+                formData.append('msg', rawText);  // Append the text message
+                if (fileInput) {
+                    formData.append('file', fileInput);  // Append the file if present
+                }
+
+                if (rawText.trim() !== "" || fileInput) {
+                    // Display user message with image
+                    const userHtml = `
+                        <div class="d-flex justify-content-end mb-4">
+                            <div class="msg_container_send">${rawText}
+                                <span class="msg_time_send">${str_time}</span>
+                            </div>
+                            <div class="img_cont_msg">
+                                <img src="https://img.icons8.com/?size=100&id=DMKogsOAUoU8&format=png&color=000000" class="user_img_msg">
+                            </div>
+                        </div>`;
+                    $("#messageForm").append(userHtml);
+                    $("#text").val(""); // Clear the input field
+
+                    // Send message to backend for processing
+                    $.ajax({
+                        type: "POST",
+                        url: "http://127.0.0.1:5000/get",
+                        data: formData,  // Send the form data containing both text and file
+                        processData: false,  // Don't process the data
+                        contentType: false,  // Tell jQuery not to set contentType
+                        success: function(response) {
+                            const botHtml = `
+                                <div class="d-flex justify-content-start mb-4">
+                                    <div class="img_cont_msg">
+                                        <img src="https://img.icons8.com/fluency/48/000000/chatbot.png" class="bot_img_msg">
+                                    </div>
+                                    <div class="msg_cotainer">${response.response}
+                                        <span class="msg_time">${str_time}</span>
+                                    </div>
+                                </div>`;
+                            $("#messageForm").append(botHtml);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error: " + error);
+                        }
+                    });
+                }
+            });
+        });
+        $("#messageForm").scrollTop($("#messageForm")[0].scrollHeight);
+
+    </script>
+    <script>
+        $(document).ready(function() {
+            // Handle login form submission
+            $('#loginForm').submit(function(event) {
+                event.preventDefault();  // Prevent form submission
+
+                var username = $('#username').val();
+                var email = $('#email').val();
+
+                if (username && email) {
+                    // Store user details (You can store them in localStorage or sessionStorage if you want to persist them)
+                    localStorage.setItem('username', username);
+                    localStorage.setItem('email', email);
+
+                    // Hide the login section and show the chatbot section
+                    $('#loginSection').hide();
+                    $('#chatbotSection').show();
+
+                    // Display user's name in the chatbot section
+                    $('#chatbotUsername').text(username + "'s Chatbot");
+                } else {
+                    alert('Please fill in both fields.');
+                }
+            });
+
+            // Handle message form submission for the chatbot
+            $('#messageArea').submit(function(event) {
+                event.preventDefault();  // Prevent form submission
+
+                var message = $('#text').val();
+                if (message) {
+                    $('#messageForm').append('<div class="msg_container_send">' + message + '</div>');
+                    $('#text').val('');
+
+                    setTimeout(function() {
+                        $('#messageForm').append('<div class="msg_cotainer">Bot response to: ' + message + '</div>');
+                    }, 1000);
+                }
+            });
+
+            // Trigger file input when attachment button is clicked
+            $('#file-btn').click(function() {
+                $('#file').click();
+            });
+        });
+    </script>
+</body>
+</html>
